@@ -53,7 +53,9 @@ library MathMasters {
             if mul(y, gt(x, div(not(0), y))) {
                 // @audit - low: This will revert with a blank message -- overriding the Free Memory Pointer
                 // memory [0x40: 0xbac65e5b]
-                mstore(0x00, 0xbac65e5b) // `MathMasters__MulWadFailed()`.
+                mstore(0x00, 0xa56044f7) // `MathMasters__MulWadFailed()`.
+                // checked function selector with: cast sig "MathMasters__MulWadFailed()"
+                // @audit - wrong function selector, should be: 0xa56044f7
 
                 // memory [0x1c: ????]
                 // ^^^ basically padding with 28 bytes, like this: 0x0000000....bac65e5b
