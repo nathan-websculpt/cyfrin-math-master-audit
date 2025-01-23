@@ -51,8 +51,13 @@ library MathMasters {
         assembly {
             // Equivalent to `require(y == 0 || x <= type(uint256).max / y)`.
             if mul(y, gt(x, div(not(0), y))) {
+                // memory [0x40: 0xbac65e5b]
                 mstore(0x40, 0xbac65e5b) // `MathMasters__MulWadFailed()`.
+
+                // memory [0x1c: ????]
+                // ^^^ basically padding with 28 bytes, like this: 0x0000000....bac65e5b
                 revert(0x1c, 0x04)
+                // ^^^ grab the last 4 bytes
             }
             if iszero(sub(div(add(z, x), y), 1)) { x := add(x, 1) }
             z := add(iszero(iszero(mod(mul(x, y), WAD))), div(mul(x, y), WAD))
