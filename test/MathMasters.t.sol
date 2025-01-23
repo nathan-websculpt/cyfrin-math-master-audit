@@ -11,6 +11,15 @@ contract MathMastersTest is Base_Test {
         assertEq(MathMasters.mulWad(369, 271), 0);
     }
 
+    // function testMulWadRevert() public {
+    //     MathMasters.mulWad(type(uint256).max, type(uint256).max);
+    // }
+
+    function testCertoraOutput() public {
+        uint256 x = 0;
+        assertEq(MathMasters.sqrt(x), uniSqrt(x));
+    }
+
     function testMulWadFuzz(uint256 x, uint256 y) public pure {
         // Ignore cases where x * y overflows.
         unchecked {
@@ -51,7 +60,7 @@ contract MathMastersTest is Base_Test {
         assertEq(MathMasters.sqrt(type(uint256).max), 340282366920938463463374607431768211455);
     }
 
-    function testSqrtFuzzUni(uint256 x) public pure {
+    function testSqrtFuzzUnit(uint256 x) public pure {
         assert(MathMasters.sqrt(x) == uniSqrt(x));
     }
 

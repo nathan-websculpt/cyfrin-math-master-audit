@@ -37,20 +37,12 @@ library MathMasters {
         // @solidity memory-safe-assembly
         assembly {
             // Equivalent to `require(y == 0 || x <= type(uint256).max / y)`.
-            if mul(y, gt(x, div(not(0), y))) {
-                mstore(0x40, 0xbac65e5b) // `MathMasters__MulWadFailed()`.
-                revert(0x1c, 0x04)
-            }
-            z := div(mul(x, y), WAD)
-        }
-    }
-
-    /// @dev Equivalent to `(x * y) / WAD` rounded up.
-    function mulWadUp(uint256 x, uint256 y) internal pure returns (uint256 z) {
-        /// @solidity memory-safe-assembly
-        assembly {
-            // Equivalent to `require(y == 0 || x <= type(uint256).max / y)`.
-            if mul(y, gt(x, div(not(0), y))) {
+            if mul(
+                y, 
+                gt(
+                    x, 
+                    div(not(0), y))) 
+                {
                 // @audit - low: This will revert with a blank message -- overriding the Free Memory Pointer
                 // memory [0x40: 0xbac65e5b]
                 mstore(0x00, 0xa56044f7) // `MathMasters__MulWadFailed()`.
@@ -62,8 +54,60 @@ library MathMasters {
                 revert(0x1c, 0x04)
                 // ^^^ grab the last 4 bytes
             }
-            if iszero(sub(div(add(z, x), y), 1)) { x := add(x, 1) }
-            z := add(iszero(iszero(mod(mul(x, y), WAD))), div(mul(x, y), WAD))
+            z := div(mul(x, y), WAD)
+        }
+    }
+
+    /// @dev Equivalent to `(x * y) / WAD` rounded up.
+    function mulWadUp(uint256 x, uint256 y) internal pure returns (uint256 z) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            // Equivalent to `require(y == 0 || x <= type(uint256).max / y)`.
+            if mul(
+                y, 
+                gt(
+                    x, 
+                    div(not(0), y)
+                )
+            ) 
+            {
+                // @audit - low: This will revert with a blank message -- overriding the Free Memory Pointer
+                mstore(0x00, 0xa56044f7) // `MathMasters__MulWadFailed()`.
+                // checked function selector with: cast sig "MathMasters__MulWadFailed()"
+                // @audit - wrong function selector, should be: 0xa56044f7
+                revert(0x1c, 0x04)
+            }
+
+            // e adding 1 to x if (0 + x/y) - 1 == 0
+            // @audit - high, this line is wrong and not needed
+            if iszero(
+                sub(
+                    div(
+                        add(
+                            z, 
+                            x
+                        ), 
+                        y
+                    ), 
+                1
+            )
+        ) 
+        { 
+            x := add(x, 1) 
+        }
+            z := add(
+                iszero(
+                    iszero(
+                        mod(
+                            mul(x, y), 
+                            WAD)
+                        )
+                        ), 
+                        div(
+                            mul(x, y), 
+                            WAD
+                        )
+                    )
         }
     }
 
