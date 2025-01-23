@@ -60,7 +60,8 @@ contract MathMastersTest is Base_Test {
         assertEq(MathMasters.sqrt(type(uint256).max), 340282366920938463463374607431768211455);
     }
 
-    function testSqrtFuzzUnit(uint256 x) public pure {
+    function testSqrtFuzzUni(uint256 x) public pure {
+        // test this sqrt func against uniswap's
         assert(MathMasters.sqrt(x) == uniSqrt(x));
     }
 
