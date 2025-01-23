@@ -15,4 +15,5 @@ docs/
 
 
 .certora_internal
+.hypothesis/
 oldProofOfCodes.t.sol

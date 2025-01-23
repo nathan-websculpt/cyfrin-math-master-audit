@@ -51,6 +51,15 @@ contract MathMastersTest is Base_Test {
         // depending on whether you want to consider such an overflow case as passing or failing.
     }
 
+    // halmos --function check_testMulWadUpFuzz --solver-timeout-assertion 0
+    function check_testMulWadUpFuzz(uint256 x, uint256 y) public pure {
+        if (x == 0 || y == 0 || y <= type(uint256).max / x) {
+            uint256 result = MathMasters.mulWadUp(x, y);
+            uint256 expected = x * y == 0 ? 0 : (x * y - 1) / 1e18 + 1;
+            assert(result == expected);
+        }
+    }
+
     function testSqrt() public {
         assertEq(MathMasters.sqrt(0), 0);
         assertEq(MathMasters.sqrt(1), 1);
